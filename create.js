@@ -9,7 +9,7 @@ export const main =  handler(async (event, context) => {
     const params = {
         TableName: "notes",
         Item: {
-            userId: "123",
+            userId: event.requestContext.identity.cognitoIdentityId,
             //Unique noteid
             noteId: uuid.v1(),
             //Contents of note as string
