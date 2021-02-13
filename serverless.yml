@@ -22,6 +22,7 @@ provider:
   #
   environment:
     TableName: notes
+    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
 #Defines permission policy for the Lambda function, which now are granted
 #permission to access DynamoDB
   iamRoleStatements:
@@ -47,6 +48,7 @@ functions:
           path: notes
           method: post
           authorizer: aws_iam
+          cors: true
   #Defines an HTTP API endpoint that calls the main function in get.js
   # - path: url path is /notes/{id} (id is the event.pathParameters id)
   # - method: GET request
@@ -57,6 +59,7 @@ functions:
           path: notes/{id}  
           method: get
           authorizer: aws_iam
+          cors: true
   #Defines an HTTP API endpoint that calls the main function in list.js
   # - path: url path is /notes
   # - method: GET request
@@ -67,6 +70,7 @@ functions:
           path: notes
           method: get
           authorizer: aws_iam
+          cors: true
   # Defines an HTTP API endpoint that calls the main function in update.js
   # - path: url path is /notes/{id}
   # - method: PUT request        
@@ -77,6 +81,7 @@ functions:
           path: notes/{id}
           method: put
           authorizer: aws_iam
+          cors: true
   # Defines an HTTP API endpoint that calls the main function in delete.js 
   # - path: url path is /notes/{id}
   # - method: DELETE request
@@ -87,3 +92,20 @@ functions:
           path: notes/{id}
           method: delete
           authorizer: aws_iam
+          cors: true
+  billing:
+  # Defines an HTTP API endpoint that calls the main function in billing.js # - path: url path is /billing
+  # - method: POST request
+    handler: billing.main
+    events:
+      - http:
+          path: billing
+          method: post 
+          authorizer: aws_iam  
+          cors: true
+# Create our resources with separate CloudFormation templates
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+  
+
